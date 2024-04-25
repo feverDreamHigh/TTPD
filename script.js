@@ -33,7 +33,7 @@ function startGame() {
   askQuestion(); // Start the first question
 }
 
-function updateFeedback(isCorrect) {
+function updateFeedback(isCorrect, correctTitle) {
     // Immediately clear any previous feedback to ensure visibility changes are noticed
     console.log("Updating feedback...");
     feedbackElement.classList.remove('feedback-visible');
@@ -41,7 +41,12 @@ function updateFeedback(isCorrect) {
 
     // Set a timeout to update and show new feedback after the element is cleared
     setTimeout(() => {
-        feedbackElement.innerText = isCorrect ? "Correct!" : "Incorrect!";
+        if (isCorrect) {
+            feedbackElement.innerText = "Correct!";
+        } else {
+            // Ensure backticks are used to enable template literals
+            feedbackElement.innerText = `Incorrect! The correct answer was: ${correctTitle}`;
+        }
         feedbackElement.classList.add('feedback-visible'); // Re-add visibility class to fade in
         console.log("Feedback updated and made visible.");
     }, 100); // Short delay to allow the feedback to fade out and clear before updating
@@ -91,7 +96,7 @@ function askQuestion() {
             if (isCorrect) {
                 numCorrect++;
             }
-            updateFeedback(isCorrect); // Call the new function to update feedback
+            updateFeedback(isCorrect, randomSong.title); // Call the new function to update feedback
             setTimeout(askQuestion, 1000);
         };
         choicesContainer.appendChild(button);

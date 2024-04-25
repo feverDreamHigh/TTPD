@@ -17,7 +17,7 @@ body {
   button {
     font-family: 'Lato', sans-serif; /* Ensure buttons also use Lato */
     background: linear-gradient(145deg, #c0c0c0, #808080); /* Silver gradient */
-    color: rgb(250, 248, 244); /* Gold text */
+    color: rgb(255, 255, 255);
     border: 1px solid black; /* Black border */
     padding: 10px 20px;
     font-size: 16px;
@@ -45,7 +45,7 @@ button:hover {
   margin: 5px;
   padding: 8px 16px; /* Adjust padding to fit your design */
   font-size: 16px;   /* Optional, adjusts font size for better readability */
-  border: 2px solid transparent; /* Transparent border to maintain size */
+  border: 1px solid black; /* Transparent border to maintain size */
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s ease;  
@@ -54,7 +54,7 @@ button:hover {
 .button-selected, .button-selected:hover {
   background: linear-gradient(145deg, #55460142, #423a31c2); /* Gold gradient */
   color: white; /* White text for high contrast */
-  border: 2px solid #625548; /* Dark gold border for more emphasis */
+  border: 1px solid #625548; /* Dark gold border for more emphasis */
 }
 
 
@@ -64,11 +64,11 @@ button:hover {
 
 #feedback {
   font-weight: bold;
-  margin-top: 20px;
+  margin-top: 15px;
   font-size: 18px;
   color: #423222;
-  height: 25px;  // Ensures a fixed height
-  line-height: 25px;  // Vertically centers text in the fixed height
+  height: 25px;  /* Ensures a fixed height */
+  line-height: 25px;  /* Vertically centers text in the fixed height
   display: flex;
   align-items: center;
   justify-content: center;

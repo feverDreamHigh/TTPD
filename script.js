@@ -11,7 +11,7 @@ var feedbackElement = document.getElementById('feedback'); // To display feedbac
 
 function setImage() {
   var imgContainer = document.getElementById('gameImage');
-  imgContainer.innerHTML = '<img src="https://upload.wikimedia.org/wikipedia/commons/2/24/The_Tortured_Poets_Department_Logo_v2.png" alt="Game Image" style="max-width:100%; height:auto;">';
+  imgContainer.innerHTML = '<img src="TTPDlogo.png" alt="TTPD Logo" style="max-width:100%; height:auto;">';
 }
 
 // Call this function when you want to display the image, e.g., during game setup

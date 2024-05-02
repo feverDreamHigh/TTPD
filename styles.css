@@ -80,6 +80,12 @@ transition: opacity 0.5s ease-in-out;
 opacity: 1;  /* Increased specificity with ID */
 }
 
+#leaderboard {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+
 #question {
   font-family: 'Playfair Display', serif;
   font-size: 24px;

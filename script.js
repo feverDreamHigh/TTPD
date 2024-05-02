@@ -33,6 +33,29 @@ function startGame() {
   askQuestion(); // Start the first question
 }
 
+function displayLeaderboard() {
+    const leaderboardDiv = document.getElementById('leaderboard');
+    const scoresRef = firebase.database().ref('scores').orderByChild('score').limitToLast(10);
+    scoresRef.once('value', snapshot => {
+        const scores = [];
+        snapshot.forEach(childSnapshot => {
+            scores.unshift({  // Add scores in descending order
+                name: childSnapshot.val().name,
+                score: childSnapshot.val().score
+            });
+        });
+
+        let leaderboardContent = '<h3>Leaderboard</h3>';
+        scores.forEach((score) => {
+            leaderboardContent += `<p>${score.name}: ${score.score}</p>`;
+        });
+        leaderboardDiv.innerHTML = leaderboardContent;
+        leaderboardDiv.style.display = 'block'; // Ensure the leaderboard is visible
+    });
+}
+
+
+
 function updateFeedback(isCorrect, correctTitle) {
     // Immediately clear any previous feedback to ensure visibility changes are noticed
     console.log("Updating feedback...");
@@ -45,7 +68,7 @@ function updateFeedback(isCorrect, correctTitle) {
             feedbackElement.innerText = "Correct!";
         } else {
             // Ensure backticks are used to enable template literals
-            feedbackElement.innerText = `Incorrect! The correct answer was: ${correctTitle}`;
+            feedbackElement.innerText = `Not quite! It was: ${correctTitle}`;
         }
         feedbackElement.classList.add('feedback-visible'); // Re-add visibility class to fade in
         console.log("Feedback updated and made visible.");
@@ -82,23 +105,20 @@ function askQuestion() {
         button.textContent = answer;
         button.className = 'choice';
         button.onclick = function() {
-            // Remove selected class from all buttons first (if you want to allow changing answers before locking in)
-            Array.from(choicesContainer.children).forEach(child => {
-                child.classList.remove('button-selected');
-                child.disabled = true;  // Optionally disable the button
-            });
-            
             this.classList.add('button-selected');
-            this.disabled = true;
+            this.disabled = true;  // Disable the button after it's clicked
         
-            // Determine if the answer is correct and update feedback accordingly
             const isCorrect = this.textContent === randomSong.title;
             if (isCorrect) {
                 numCorrect++;
+                updateFeedback(isCorrect, randomSong.title); // Show correct feedback
+                setTimeout(askQuestion, 1000); // Wait then ask the next question
+            } else {
+                updateFeedback(isCorrect, randomSong.title); // Show incorrect feedback
+                setTimeout(endGame, 1000); // End game after showing feedback
             }
-            updateFeedback(isCorrect, randomSong.title); // Call the new function to update feedback
-            setTimeout(askQuestion, 1000);
         };
+        
         choicesContainer.appendChild(button);
     });
 
@@ -112,40 +132,19 @@ function endGame() {
     startButton.removeEventListener('click', endGame);
     startButton.addEventListener('click', startGame);
 
-    // Change content of question element to show results
-    questionElement.innerHTML = `You got ${numCorrect} out of ${totalQuestions} answers right.`;
-    let resultText = "";
-    let imageUrl = "";
+    questionElement.innerHTML = `Game over! You got ${numCorrect} answers right.`;
 
-    if (numCorrect >= 0 && numCorrect <= 1) {
-        resultText = "Better luck next time!";
-        imageUrl = "img1a.gif";
-    } else if (numCorrect >= 2 && numCorrect <= 3) {
-        resultText = "Decent effort!";
-        imageUrl = "img2a.gif";
-    } else if (numCorrect === 4) {
-        resultText = "Impressive!";
-        imageUrl = "img3a.gif";
-    } else if (numCorrect === 5) {
-        resultText = "A true Swiftie!";
-        imageUrl = "img4a.gif";
-    }
+    // Disable all buttons and hide them
+    Array.from(choicesContainer.children).forEach(button => {
+        button.disabled = true;  // Disable buttons to prevent further clicks
+        button.style.display = 'none';  // Hide buttons
+    });
 
-    // Optionally create an image element to show the result image
-    let resultImage = document.createElement('img');
-    resultImage.src = imageUrl;
-    resultImage.alt = resultText;
-    resultImage.style.maxWidth = "100%"; // Ensure the image fits the container
-    resultImage.style.height = "auto";
+    displayLeaderboard();  // Call to display the leaderboard
 
-    // Append result text and image to the question element
-    questionElement.innerHTML += `<p>${resultText}</p>`;
-    questionElement.appendChild(resultImage);
-
-    // Hide choice buttons and show feedback
-    choicesContainer.style.display = 'none';
-    feedbackElement.innerText = "";
+    feedbackElement.innerText = ""; // Clear feedback text
 }
+
 
 
 // Function to load song data and initialize game settings
@@ -165,6 +164,17 @@ function initializeGame() {
             feedbackElement.innerText = "Failed to load song data. Check console for details.";
         });
 }
+
+function saveScore(score, playerName) {
+    const dbRef = firebase.database().ref('scores');
+    const newScore = dbRef.push(); // Create a new entry in the 'scores' node
+    newScore.set({
+        name: playerName,
+        score: score
+    });
+}
+
+
 
 // Event listener for when the DOM content has fully loaded
 document.addEventListener('DOMContentLoaded', initializeGame);

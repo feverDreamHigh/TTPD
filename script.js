@@ -34,25 +34,17 @@ function startGame() {
 }
 
 function displayLeaderboard() {
-    const db = window.db; // Access the database object
+    const db = getDatabase(); // Ensure you get the database reference correctly
     const scoresRef = query(ref(db, 'scores'), orderByChild('score'), limitToLast(10));
     get(scoresRef).then((snapshot) => {
         if (snapshot.exists()) {
-            const scores = [];
+            let leaderboardHTML = '<h3>Leaderboard</h3>';
             snapshot.forEach((childSnapshot) => {
-                scores.unshift({  // This ensures scores are displayed from highest to lowest
-                    name: childSnapshot.val().name,
-                    score: childSnapshot.val().score
-                });
-            });
-
-            let leaderboardContent = '<h3>Leaderboard</h3>';
-            scores.forEach((score) => {
-                leaderboardContent += `<p>${score.name}: ${score.score}</p>`;
+                leaderboardHTML += `<p>${childSnapshot.val().name}: ${childSnapshot.val().score}</p>`;
             });
             const leaderboardDiv = document.getElementById('leaderboard');
-            leaderboardDiv.innerHTML = leaderboardContent;
-            leaderboardDiv.style.display = 'block'; // Ensure the leaderboard is visible
+            leaderboardDiv.innerHTML = leaderboardHTML;
+            leaderboardDiv.style.display = 'block';
         } else {
             console.log("No scores available");
         }
@@ -60,9 +52,6 @@ function displayLeaderboard() {
         console.error("Error fetching scores:", error);
     });
 }
-
-
-
 
 function updateFeedback(isCorrect, correctTitle) {
     // Immediately clear any previous feedback to ensure visibility changes are noticed
@@ -140,20 +129,20 @@ function endGame() {
     startButton.removeEventListener('click', endGame);
     startButton.addEventListener('click', startGame);
 
-    questionElement.innerHTML = `Game over! You got ${numCorrect} answers right.`;
-
-    // Disable all buttons and hide them
+    // Ensure all answer buttons are disabled and hide them
     Array.from(choicesContainer.children).forEach(button => {
-        button.disabled = true;  // Disable buttons to prevent further clicks
-        button.style.display = 'none';  // Hide buttons
+        button.disabled = true; 
+        button.style.display = 'none'; 
     });
 
-    displayLeaderboard();  // Call to display the leaderboard
+    // Update question element to show final score
+    questionElement.innerHTML = `Game over! You got ${numCorrect} answers right.`;
 
-    feedbackElement.innerText = ""; // Clear feedback text
+    // Display the leaderboard
+    displayLeaderboard();
+
+    feedbackElement.innerText = ""; // Clear feedback
 }
-
-
 
 // Function to load song data and initialize game settings
 function initializeGame() {

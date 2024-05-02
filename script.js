@@ -34,25 +34,33 @@ function startGame() {
 }
 
 function displayLeaderboard() {
-    const leaderboardDiv = document.getElementById('leaderboard');
-    const scoresRef = firebase.database().ref('scores').orderByChild('score').limitToLast(10);
-    scoresRef.once('value', snapshot => {
-        const scores = [];
-        snapshot.forEach(childSnapshot => {
-            scores.unshift({  // Add scores in descending order
-                name: childSnapshot.val().name,
-                score: childSnapshot.val().score
+    const db = window.db; // Access the database object
+    const scoresRef = query(ref(db, 'scores'), orderByChild('score'), limitToLast(10));
+    get(scoresRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            const scores = [];
+            snapshot.forEach((childSnapshot) => {
+                scores.unshift({  // This ensures scores are displayed from highest to lowest
+                    name: childSnapshot.val().name,
+                    score: childSnapshot.val().score
+                });
             });
-        });
 
-        let leaderboardContent = '<h3>Leaderboard</h3>';
-        scores.forEach((score) => {
-            leaderboardContent += `<p>${score.name}: ${score.score}</p>`;
-        });
-        leaderboardDiv.innerHTML = leaderboardContent;
-        leaderboardDiv.style.display = 'block'; // Ensure the leaderboard is visible
+            let leaderboardContent = '<h3>Leaderboard</h3>';
+            scores.forEach((score) => {
+                leaderboardContent += `<p>${score.name}: ${score.score}</p>`;
+            });
+            const leaderboardDiv = document.getElementById('leaderboard');
+            leaderboardDiv.innerHTML = leaderboardContent;
+            leaderboardDiv.style.display = 'block'; // Ensure the leaderboard is visible
+        } else {
+            console.log("No scores available");
+        }
+    }).catch((error) => {
+        console.error("Error fetching scores:", error);
     });
 }
+
 
 
 

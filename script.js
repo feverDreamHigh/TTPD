@@ -18,7 +18,6 @@ const db = getDatabase(app);
 // Declare a variable to store the songs data
 var songs = [];
 var numQuestionsAsked = 0; // Initialize counter for the number of questions asked
-var totalQuestions = 5; // Total number of questions you want to ask
 var numCorrect = 0; // To keep track of correct answers
 
 var questionElement = document.getElementById('question');
@@ -52,7 +51,7 @@ function startGame() {
 
 function displayLeaderboard() {
     const db = getDatabase(); // Ensure you get the database reference correctly
-    const scoresRef = query(ref(db, 'scores'), orderByChild('score'), limitToLast(10));
+    const scoresRef = query(ref(db, 'scores'), orderByChild('score'), limitToLast(5));
     get(scoresRef).then((snapshot) => {
         if (snapshot.exists()) {
             const scores = [];
@@ -66,9 +65,9 @@ function displayLeaderboard() {
             // Reverse the array to display the highest scores first
             scores.reverse();
 
-            let leaderboardHTML = '<h3>Leaderboard</h3>';
+            let leaderboardHTML = '<h3>Swiftie Leaderboard</h3>';
             scores.forEach((score) => {
-                leaderboardHTML += `<p>${score.name}: ${score.score}</p>`;
+                leaderboardHTML += `<p><strong>${score.name}</strong>: ${score.score} points</p>`;
             });
             const leaderboardDiv = document.getElementById('leaderboard');
             leaderboardDiv.innerHTML = leaderboardHTML;
@@ -104,11 +103,6 @@ function updateFeedback(isCorrect, correctTitle) {
 // Function to ask a new question
 function askQuestion() {
     console.log("Asking new question. Total asked:", numQuestionsAsked);
-    if (numQuestionsAsked >= totalQuestions) {
-        console.log("No more questions, ending game.");
-        endGame();
-        return;
-    }
 
     var randomSongIndex = Math.floor(Math.random() * songs.length);
     var randomSong = songs[randomSongIndex];

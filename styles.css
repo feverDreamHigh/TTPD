@@ -16,9 +16,9 @@ body {
 
 button {
   font-family: 'Lato', sans-serif; /* Ensure buttons also use Lato */
-  background: linear-gradient(145deg, #c0c0c0, #808080); /* Silver gradient */
-  color: rgb(255, 255, 255);
-  border: 1px solid black; /* Black border */
+  background: linear-gradient(145deg, #55460142, #423a31c2); /* Gold gradient */
+  color: white; /* White text for high contrast */
+  border: 1px solid #625548; /* Dark gold border for more emphasis */
   padding: 10px 20px;
   font-size: 16px;
   font-weight: bold;
@@ -80,14 +80,44 @@ opacity: 1;  /* Increased specificity with ID */
 }
 
 #aboveStart {
-  margin-top: 50px;
+  margin-top: 20px;
+}
+
+#playerName {
+  width: 100px;  /* Adjust the width as necessary */
+  padding: 10px 10px; /* Padding to match the button */
+  margin: 10px auto; /* Center align */
+  display: block; /* Make the input block level */
+  font-size: 13px; /* Match font size with the button */
+  font-family: 'Lato', sans-serif;
+  border: 1px solid #ccc; /* Give the input field a defined border */
 }
 
 #leaderboard {
-  color: black;  /* Ensure text is readable */
-  background-color: white;  
-  display: block !important;
-  margin-top: 50px;
+  font-family: 'Playfair Display', serif; /* Match the font style with the question box */
+  color: #333; /* Dark color for text, matching question box */
+  background-color: #f0f0f0; /* Light background, matching question box */
+  border: 1px solid #ccc; /* Subtle border, matching question box */
+  padding: 15px 10px 25px 10px;
+  border-radius: 5px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  text-align: center;
+  margin: 40px auto; /* Centered with space */
+  width: 50%; /* Limiting width for better text display */
+  display: block; /* Ensure it is a block element to center it */
+}
+
+#leaderboard h3 {
+  color: #625349; /* Set the color of the leaderboard heading to gold */
+  font-weight: bold; /* Keep the heading bold if you prefer */
+  font-size: 20px;
+}
+
+#leaderboard p {
+  font-weight: normal;
+  font-size: 16px;
+  margin: 10px 0; /* Adjust spacing between each score for tighter layout */
+  font-family: 'Lato', serif; /* Match the font style with the question box */
 }
 
 #question {

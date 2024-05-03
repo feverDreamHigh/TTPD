@@ -27,7 +27,7 @@ button {
   background: linear-gradient(145deg, #55460142, #423a31c2); /* Gold gradient */
   color: white; /* White text for high contrast */
   border: 1px solid #625548; /* Dark gold border for more emphasis */
-  padding: 10px 20px;
+  padding: 10px 25px;
   font-size: 16px;
   font-weight: bold;
   border-radius: 5px;
@@ -93,10 +93,13 @@ opacity: 1;  /* Increased specificity with ID */
 }
 
 #playerName {
-  width: 101px;  /* Adjust the width as necessary */
+  width: 110px;  /* Adjust the width as necessary */
   padding: 10px 10px; /* Padding to match the button */
   margin: 5px auto; /* Center align */
   display: block; /* Make the input block level */
+  &::placeholder {
+  text-align: center;
+    }
   font-size: 14px; /* Match font size with the button */
   font-family: 'Lato', sans-serif;
   border: 1px solid #ccc; /* Give the input field a defined border */

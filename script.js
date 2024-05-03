@@ -104,6 +104,12 @@ function updateFeedback(isCorrect, correctTitle) {
 function askQuestion() {
     console.log("Asking new question. Total asked:", numQuestionsAsked);
 
+    // Clear the styles of all previously selected buttons
+    Array.from(choicesContainer.children).forEach(button => {
+        button.classList.remove('button-selected');
+        button.disabled = false;  // Re-enable the button
+    });
+
     var randomSongIndex = Math.floor(Math.random() * songs.length);
     var randomSong = songs[randomSongIndex];
     var randomLyricIndex = Math.floor(Math.random() * randomSong.lyrics.length);
@@ -162,7 +168,7 @@ function endGame() {
     });
 
     // Update question element to show final score
-    questionElement.innerHTML = `Game over! You got ${numCorrect} answers right.`;
+    questionElement.innerHTML = `Game over! You got ${numCorrect} ${numCorrect === 1 ? 'answer' : 'answers'} right.`;
 
     // Display the leaderboard
     displayLeaderboard();

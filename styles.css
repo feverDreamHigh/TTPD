@@ -95,7 +95,7 @@ opacity: 1;  /* Increased specificity with ID */
 #playerName {
   width: 101px;  /* Adjust the width as necessary */
   padding: 10px 10px; /* Padding to match the button */
-  margin: 10px auto; /* Center align */
+  margin: 5px auto; /* Center align */
   display: block; /* Make the input block level */
   font-size: 14px; /* Match font size with the button */
   font-family: 'Lato', sans-serif;

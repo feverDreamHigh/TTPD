@@ -196,18 +196,26 @@ function initializeGame() {
 
 // Function to save the score to the Firebase database
 function saveScore(score, playerName) {
-    console.log(`Saving score ${score} for player ${playerName}`); // Debug log
-    const scoresRef = ref(db, 'scores'); // Correctly getting a reference to 'scores'
-    const newScoreRef = push(scoresRef); // Correctly using push to create a new node
-    set(newScoreRef, {
-        name: playerName,
-        score: score
-    }).then(() => {
-        console.log('Score saved successfully.'); // Confirm save success
-    }).catch(error => {
-        console.error('Failed to save score:', error); // Log any errors
-    });
+    console.log(`Attempting to save score: ${score}, Name: ${playerName}`); // Ensure the data is correct before sending to Firebase
+
+    if (typeof score === 'number' && score >= 0 && score <= 1000 && typeof playerName === 'string' && playerName.trim() !== '') {
+        const scoresRef = ref(db, 'scores');
+        const newScoreRef = push(scoresRef);
+        set(newScoreRef, {
+            name: playerName,
+            score: score
+        }).then(() => {
+            console.log('Score saved successfully.');
+        }).catch(error => {
+            console.error('Failed to save score:', error);
+            console.error(`Detailed Firebase error: ${error.message}`);
+        });
+    } else {
+        console.log('Failed validation. Score not saved.');
+    }
 }
+
+
 
 // Event listener for when the DOM content has fully loaded
 document.addEventListener('DOMContentLoaded', initializeGame);

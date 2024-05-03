@@ -18,16 +18,18 @@
         <div id="choices"></div>
         <p id="feedback"></p>
         <input type="text" id="playerName" placeholder="Enter your name">
-        <div id="leaderboard" style="display:none;"></div>
-        <p></p>
-        <p></p>
+        <p id="aboveStart"></p>
         <button id="start">Start Game</button>
+        <p></p>
+        <div id="leaderboard" style="display:none;"></div>
+
+        
     </div>
     <script type="module">
       // Import the functions you need from the SDKs you need
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
       import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js";
-      import { getDatabase } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js"; // Make sure to import this
+      import { getDatabase, ref, push, set, query, orderByChild, limitToLast, get } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
       
       // Your web app's Firebase configuration
       // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -47,6 +49,6 @@
       const db = getDatabase(app); // Initialize database, this is needed to access your database
       const analytics = getAnalytics(app);
     </script>
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>

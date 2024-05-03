@@ -1,3 +1,20 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+import { getDatabase, ref, push, set, query, orderByChild, limitToLast, get } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBbi7ZZPqmAsb0Y_ZAFIIo9EkNOmdmXP_U",
+    authDomain: "ttpd-9b795.firebaseapp.com",
+    databaseURL: "https://ttpd-9b795-default-rtdb.firebaseio.com",
+    projectId: "ttpd-9b795",
+    storageBucket: "ttpd-9b795.appspot.com",
+    messagingSenderId: "1006590976096",
+    appId: "1:1006590976096:web:9f66091e7581bf47712305",
+    measurementId: "G-MEBKNCLJMY"
+  };
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
 // Declare a variable to store the songs data
 var songs = [];
 var numQuestionsAsked = 0; // Initialize counter for the number of questions asked
@@ -38,9 +55,20 @@ function displayLeaderboard() {
     const scoresRef = query(ref(db, 'scores'), orderByChild('score'), limitToLast(10));
     get(scoresRef).then((snapshot) => {
         if (snapshot.exists()) {
-            let leaderboardHTML = '<h3>Leaderboard</h3>';
+            const scores = [];
             snapshot.forEach((childSnapshot) => {
-                leaderboardHTML += `<p>${childSnapshot.val().name}: ${childSnapshot.val().score}</p>`;
+                // Push each score into the array
+                scores.push({
+                    name: childSnapshot.val().name,
+                    score: childSnapshot.val().score
+                });
+            });
+            // Reverse the array to display the highest scores first
+            scores.reverse();
+
+            let leaderboardHTML = '<h3>Leaderboard</h3>';
+            scores.forEach((score) => {
+                leaderboardHTML += `<p>${score.name}: ${score.score}</p>`;
             });
             const leaderboardDiv = document.getElementById('leaderboard');
             leaderboardDiv.innerHTML = leaderboardHTML;
@@ -52,6 +80,7 @@ function displayLeaderboard() {
         console.error("Error fetching scores:", error);
     });
 }
+
 
 function updateFeedback(isCorrect, correctTitle) {
     // Immediately clear any previous feedback to ensure visibility changes are noticed
@@ -125,6 +154,9 @@ function askQuestion() {
 // Function to end the game
 function endGame() {
     console.log("Ending game. Total correct:", numCorrect, "out of", numQuestionsAsked);
+    const playerName = document.getElementById('playerName').value || "Anonymous";  // Get player name or default to "Anonymous"
+    saveScore(numCorrect, playerName); // Save the score to Firebase
+
     startButton.innerText = "Play Again";
     startButton.removeEventListener('click', endGame);
     startButton.addEventListener('click', startGame);
@@ -162,16 +194,20 @@ function initializeGame() {
         });
 }
 
+// Function to save the score to the Firebase database
 function saveScore(score, playerName) {
-    const dbRef = firebase.database().ref('scores');
-    const newScore = dbRef.push(); // Create a new entry in the 'scores' node
-    newScore.set({
+    console.log(`Saving score ${score} for player ${playerName}`); // Debug log
+    const scoresRef = ref(db, 'scores'); // Correctly getting a reference to 'scores'
+    const newScoreRef = push(scoresRef); // Correctly using push to create a new node
+    set(newScoreRef, {
         name: playerName,
         score: score
+    }).then(() => {
+        console.log('Score saved successfully.'); // Confirm save success
+    }).catch(error => {
+        console.error('Failed to save score:', error); // Log any errors
     });
 }
-
-
 
 // Event listener for when the DOM content has fully loaded
 document.addEventListener('DOMContentLoaded', initializeGame);

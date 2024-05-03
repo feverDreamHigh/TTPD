@@ -57,8 +57,7 @@ color: white; /* White text for high contrast */
 border: 1px solid #625548; /* Dark gold border for more emphasis */
 }
 
-
- #choices {
+#choices {
   display: none;  /* Hide the entire container for the choices */
  } 
 
@@ -80,11 +79,16 @@ transition: opacity 0.5s ease-in-out;
 opacity: 1;  /* Increased specificity with ID */
 }
 
-#leaderboard {
-  max-height: 300px;
-  overflow-y: auto;
+#aboveStart {
+  margin-top: 50px;
 }
 
+#leaderboard {
+  color: black;  /* Ensure text is readable */
+  background-color: white;  
+  display: block !important;
+  margin-top: 50px;
+}
 
 #question {
   font-family: 'Playfair Display', serif;

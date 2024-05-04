@@ -81,24 +81,37 @@ function displayLeaderboard() {
 }
 
 
-function updateFeedback(isCorrect, correctTitle) {
-    // Immediately clear any previous feedback to ensure visibility changes are noticed
+function updateFeedback(isCorrect, correctTitle, lyric) {
     console.log("Updating feedback...");
     feedbackElement.classList.remove('feedback-visible');
     feedbackElement.innerText = ""; // Clear text immediately
 
-    // Set a timeout to update and show new feedback after the element is cleared
     setTimeout(() => {
         if (isCorrect) {
             feedbackElement.innerText = "Correct!";
         } else {
-            // Ensure backticks are used to enable template literals
             feedbackElement.innerText = `Not quite! It was: ${correctTitle}`;
+            saveStruggle(lyric, correctTitle); // Save the incorrect attempt for analysis
         }
-        feedbackElement.classList.add('feedback-visible'); // Re-add visibility class to fade in
+        feedbackElement.classList.add('feedback-visible');
         console.log("Feedback updated and made visible.");
-    }, 100); // Short delay to allow the feedback to fade out and clear before updating
+    }, 100);
 }
+
+// Function to save details of the struggle to Firebase
+function saveStruggle(lyric, title) {
+    const strugglesRef = ref(db, 'struggles');
+    const newStruggleRef = push(strugglesRef);
+    set(newStruggleRef, {
+        lyric: lyric,
+        title: title
+    }).then(() => {
+        console.log('Struggle saved successfully.');
+    }).catch(error => {
+        console.error('Failed to save struggle:', error);
+    });
+}
+
 
 // Function to ask a new question
 function askQuestion() {
@@ -132,22 +145,21 @@ function askQuestion() {
         button.className = 'choice';
         button.onclick = function() {
             this.classList.add('button-selected');
-            this.disabled = true;  // Disable the button after it's clicked
+            this.disabled = true;
         
             const isCorrect = this.textContent === randomSong.title;
             if (isCorrect) {
                 numCorrect++;
-                updateFeedback(isCorrect, randomSong.title); // Show correct feedback
-                setTimeout(askQuestion, 1000); // Wait then ask the next question
+                updateFeedback(isCorrect, randomSong.title, randomLyric); // Include lyric in feedback
+                setTimeout(askQuestion, 1000);
             } else {
-                updateFeedback(isCorrect, randomSong.title); // Show incorrect feedback
-                setTimeout(endGame, 1000); // End game after showing feedback
+                updateFeedback(isCorrect, randomSong.title, randomLyric); // Include lyric in feedback
+                setTimeout(endGame, 1000);
             }
         };
-        
         choicesContainer.appendChild(button);
     });
-
+    
     numQuestionsAsked++; // Increment after setting up the question
 }
 

@@ -45,7 +45,7 @@ function startGame() {
   startButton.classList.add('button-end-game'); // Add the darker style for end game
   startButton.removeEventListener('click', startGame); // Remove start game listener
   startButton.addEventListener('click', endGame); // Add end game listener
-
+  document.getElementById('shareButton').style.display = 'none'; // Hide share button during gameplay
   askQuestion(); // Start the first question
 }
 
@@ -177,6 +177,7 @@ function endGame() {
     Array.from(choicesContainer.children).forEach(button => {
         button.disabled = true; 
         button.style.display = 'none'; 
+        document.getElementById('shareButton').style.display = 'block'; // Show share button
     });
 
     // Update question element to show final score
@@ -187,6 +188,17 @@ function endGame() {
 
     feedbackElement.innerText = ""; // Clear feedback
 }
+
+function shareScoreOnX(score) {
+    const tweetText = `I've just guessed ${score} TTPD ${score === 1 ? 'song' : 'songs'} correctly! Think you can do better? Try it here: https://feverdreamhigh.github.io/TTPD #TaylorSwift`;
+    const tweetUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+    window.open(tweetUrl, '_blank'); // Opens the tweet in a new tab
+}
+
+document.getElementById('shareButton').addEventListener('click', function() {
+    shareScoreOnX(numCorrect);
+});
+
 
 // Function to load song data and initialize game settings
 function initializeGame() {

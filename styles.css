@@ -156,3 +156,22 @@ width: auto; /* Maintain aspect ratio */
 display: block; /* Ensures the image is block level to center it easily */
 margin: 10px auto; /* Center the image horizontally and add some space */
 }
+
+#shareButton {
+  display: none;  
+  margin: 20px auto;  
+  padding: 10px 20px;  
+  font-size: 16px;  
+  cursor: pointer;  
+  font-family: 'Lato', sans-serif; /* Ensure buttons also use Lato */
+  background: linear-gradient(145deg, #55460142, #423a31c2); /* Gold gradient */
+  color: white; /* White text for high contrast */
+  border: 1px solid #625548; /* Dark gold border for more emphasis */ 
+  border-radius: 5px;
+}
+
+#shareButton:hover {
+  background: linear-gradient(145deg, #808080, #c0c0c0); /* Inverted gradient on hover */
+  color: #f5f5f5;
+}
+

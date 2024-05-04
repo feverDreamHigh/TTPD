@@ -59,7 +59,17 @@ cursor: pointer;
 transition: all 0.3s ease;  
 }
 
-.button-selected, .button-selected:hover {
+.choice:hover {
+  background: linear-gradient(145deg, #808080, #c0c0c0); /* Inverted gradient on hover */
+  color: #f5f5f5;
+}
+
+.choice.button-selected:hover {
+  /* Keep the selected style even on hover */
+  background: linear-gradient(145deg, #55460142, #423a31c2);
+}
+
+.button-selected, .button-selected:hover, .button-selected:active {
 background: linear-gradient(145deg, #55460142, #423a31c2); /* Gold gradient */
 color: white; /* White text for high contrast */
 border: 1px solid #625548; /* Dark gold border for more emphasis */
